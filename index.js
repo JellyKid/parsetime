@@ -14,17 +14,16 @@ function parsePath(path) {
 
 module.exports = function(req,res){
   var path = parsePath(req.path);
-  if(/\d{10,13}/.test(path)){
-    var multiplier = /\d{10}/.test(path) ? 1000 : 1;
+  var unix = null;
+  var natural = null;
+  var tzOffset = (new Date()).getTimezoneOffset() * 60;
+  if(parseFloat(path) > 0){
     unix = parseFloat(path);
-    natural = dateFormat(unix * multiplier, 'mmmm d, yyyy');
-  } else {
-    unix = Date.parse(path) / 1000;
-    natural = path || null;
+    natural = dateFormat((unix + tzOffset) * 1000, 'mmmm d, yyyy, h:MM TT');
   }
-  if(isNaN(unix) && natural === 'Invalid Date'){
-    unix = null;
-    natural = null;
+  if(isNaN(parseFloat(path))){
+    unix = Math.round((Date.parse(path) + tzOffset)/ 1000);
+    natural = path || null;
   }
   res.send(JSON.stringify({
     unix: unix,
