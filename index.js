@@ -16,13 +16,13 @@ module.exports = function(req,res){
   var path = parsePath(req.path);
   var unix = null;
   var natural = null;
-  var tzOffset = (new Date()).getTimezoneOffset() * 60;
-  if(parseFloat(path) > 0){
+  var tzOffset = ((new Date()).getTimezoneOffset()) * 60;
+  if(parseFloat(path) > 0){ ///numeral input
     unix = parseFloat(path);
-    natural = dateFormat((unix + tzOffset) * 1000, 'mmmm d, yyyy, h:MM TT');
+    natural = dateFormat((unix + tzOffset)*1000, 'mmmm d, yyyy, h:MM TT');
   }
-  if(isNaN(parseFloat(path))){
-    unix = Math.round((Date.parse(path) + tzOffset)/ 1000);
+  if(isNaN(parseFloat(path)) && Date.parse(path)){///natural input
+    unix = Math.round(((Date.parse(path)) / 1000) - tzOffset);
     natural = path || null;
   }
   res.send(JSON.stringify({
