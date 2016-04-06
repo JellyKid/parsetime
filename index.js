@@ -14,13 +14,13 @@ function parsePath(path) {
 
 module.exports = function(req,res){
   var path = parsePath(req.path);
-  if(/\d{10}/.test(path)){
-    unix = Number.parseFloat(path);
-    natural = dateFormat(unix * 1000, 'mmmm d, yyyy');
-    console.log(new Date(unix * 1000));
+  if(/\d{10,13}/.test(path)){
+    var multiplier = /\d{10}/.test(path) ? 1000 : 1;
+    unix = parseFloat(path);
+    natural = dateFormat(unix * multiplier, 'mmmm d, yyyy');
   } else {
     unix = Date.parse(path) / 1000;
-    natural = path;
+    natural = path || null;
   }
   if(isNaN(unix) && natural === 'Invalid Date'){
     unix = null;
