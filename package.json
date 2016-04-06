@@ -11,8 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dateformat": "^1.0.12",
     "express": "^4.13.4",
-    "mongodb": "^2.1.14"
+    "moment": "^2.12.0"
   }
 }

@@ -1,4 +1,4 @@
-var dateFormat = require('dateformat');
+var moment = require('moment');
 
 function parsePath(path) {
   return path.replace(/(\/)|(\%20)/g,function(match,p1,p2){
@@ -16,13 +16,12 @@ module.exports = function(req,res){
   var path = parsePath(req.path);
   var unix = null;
   var natural = null;
-  var tzOffset = ((new Date()).getTimezoneOffset()) * 60;
-  if(parseFloat(path) > 0){ ///numeral input
+  if(parseFloat(path) >= 0){ ///numeral input
     unix = parseFloat(path);
-    natural = dateFormat((unix + tzOffset)*1000, 'mmmm d, yyyy, h:MM TT');
+    natural = moment.unix(unix).utc().format('MMMM DD, YYYY, h:mm A');
   }
-  if(isNaN(parseFloat(path)) && Date.parse(path)){///natural input
-    unix = Math.round(((Date.parse(path)) / 1000) - tzOffset);
+  if(isNaN(parseFloat(path)) && moment(path).isValid()){///natural input
+    unix = parseFloat(moment.utc(path).format('X'));
     natural = path || null;
   }
   res.send(JSON.stringify({
