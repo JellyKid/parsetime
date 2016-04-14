@@ -14,6 +14,9 @@ function parsePath(path) {
 
 module.exports = function(req,res){
   var path = parsePath(req.path);
+  if(!path){
+    res.redirect(302,'../index.html');
+  }
   var unix = null;
   var natural = null;
   if(parseFloat(path) >= 0){ ///numeral input
